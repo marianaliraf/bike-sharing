@@ -1,0 +1,62 @@
+```markdown
+
+Atue como um cientista de dados experiente e professor de Machine Learning.
+
+Você tem um notebook de regressão para previsão da demanda por bicicletas compartilhadas. As seguintes etapas já foram desenvolvidas e os resultados estão disponíveis no ambiente:
+
+*   **Engenharia de atributos:** As variáveis `period_day`, `is_weekend`, `is_rush_hour` e `is_bad_weather` foram criadas a partir das colunas originais (`hr`, `weekday`, `weathersit`).
+*   **Preparação dos dados:** Os dados foram separados em `X_train`, `y_train`, `X_test`, `y_test`. O `X_train` contém as colunas que o modelo espera como features.
+*   **Modelagem:** Um modelo XGBoost otimizado com Optuna (`best_xgb`) foi treinado e está disponível no ambiente.
+*   **DataFrames:** `df`, `df2`, `df3`, `treino`, `teste`, `X_train`, `X_test` e `best_xgb` estão acessíveis.
+
+Sua tarefa é criar uma etapa final para transformar o que foi desenvolvido no notebook em uma estrutura reutilizável para predição. Gere as seguintes células:
+
+
+## Célula de código — Exportação de Artefatos
+
+Gere uma célula de código Python para:
+- Exportar o modelo XGBoost otimizado, armazenado no objeto `best_xgb`, utilizando `joblib`. O arquivo exportado deve se chamar `bike_sharing_xgb_model.pkl` e ser salvo no diretório `artefacts/`.
+- Exportar a lista de nomes das colunas de treinamento (`X_train.columns.tolist()`) utilizando `joblib`. O arquivo exportado deve se chamar `feature_columns.pkl` e ser salvo no diretório `artefacts/`.
+
+**Nota:** O diretório `artefacts/` já existe no ambiente.
+
+## Célula de código — Classe Preditiva `BikeSharingPredictor`
+
+Crie uma classe Python chamada `BikeSharingPredictor` que deve:
+- Carregar o modelo salvo em `artefacts/bike_sharing_xgb_model.pkl` e as colunas de feature salvas em `artefacts/feature_columns.pkl` diretamente no método `__init__`, usando caminhos relativos.
+- Receber novos dados brutos em formato de DataFrame para predição.
+- Internamente, criar as mesmas variáveis de engenharia de atributos utilizadas no notebook:
+  - `period_day` (a partir de `hr`: 0-5 Madrugada, 6-11 Manhã, 12-17 Tarde, 18-23 Noite);
+  - `is_weekend` (a partir de `weekday`: 0=Dom, 6=Sáb são fim de semana);
+  - `is_rush_hour` (a partir de `hr`: 7-9h e 17-19h são horários de pico);
+  - `is_bad_weather` (a partir de `weathersit`: >=3 é tempo ruim).
+- Garantir que os dados usados na predição tenham as mesmas colunas esperadas pelo modelo e na mesma ordem, utilizando a lista de colunas carregada.
+- Realizar a predição com o modelo carregado.
+- Retornar as previsões.
+
+A classe deve conter, no mínimo:
+- Método `__init__` (sem parâmetros `model_path` ou `feature_columns` externos, pois eles serão carregados internamente).
+- Método privado para criação das features (`_create_features`).
+- Método privado para preparação dos dados (`_prepare_data`).
+- Método público `predict`.
+
+Use nomes claros e comentários didáticos no código.
+
+## Célula de código — Exemplo de uso
+
+Gere uma célula demonstrando como utilizar a classe `BikeSharingPredictor` para realizar previsões em novos dados. O exemplo deve:
+- Criar uma cópia pequena de `X_test` (`teste.drop(...)`) simulando `new_raw_data_sample`.
+- Instanciar a classe `BikeSharingPredictor` (sem passar argumentos para o `__init__`).
+- Chamar o método `predict` com `new_raw_data_sample`.
+- Exibir as primeiras previsões, comparando-as com os valores reais (`actual_cnt`) do `teste` original para as linhas selecionadas.
+
+**Importante:**
+- Não crie uma API ainda.
+- Não utilize FastAPI nesta etapa.
+- Não altere o modelo treinado.
+- Não treine novamente o modelo.
+- Não realize nova otimização.
+- Não gere novas métricas.
+- O foco é apenas exportar o modelo e criar uma classe reutilizável para inferência.
+- A resposta deve ser organizada em células de Markdown e código, prontas para serem inseridas no notebook no final.
+```
